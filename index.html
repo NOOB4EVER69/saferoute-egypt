@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeRoute مصر - منصة الإبلاغ عن التحرش</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --danger-color: #d33f49;
+            --safe-color: #4cb944;
+            --warning-color: #ffe74c;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #f8f9fa;
+            --dark-bg: #1a1a1a;
+            --dark-card: #2d2d2d;
+            --dark-border: #444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .dark-mode .hero {
+            background-color: #1e2a3a;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dark-mode .card {
+            background: var(--dark-card);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        form label {
+            display: block;
+            margin: 1rem 0 0.5rem;
+            font-weight: 500;
+        }
+
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+            color: var(--dark-text);
+        }
+
+        .dark-mode form input[type="text"],
+        .dark-mode form input[type="datetime-local"],
+        .dark-mode form select,
+        .dark-mode form textarea {
+            background-color: #333;
+            color: var(--light-text);
+            border-color: var(--dark-border);
+        }
+
+        form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .dark-mode table {
+            background: var(--dark-card);
+        }
+
+        th,
+        td {
+            padding: 1rem 0.5rem;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .dark-mode th,
+        .dark-mode td {
+            border-bottom-color: var(--dark-border);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            position: sticky;
+            top: 60px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .dark-mode tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        .high-risk {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        .moderate-risk {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        .low-risk {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .generally-safe {
+            color: var(--safe-color);
+            font-weight: bold;
+        }
+
+        .emergency-box {
+            background-color: #ffebee;
+            border-right: 4px solid var(--danger-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .dark-mode .emergency-box {
+            background-color: #3a1e1e;
+        }
+
+        .emergency-box h3 {
+            color: var(--danger-color);
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: auto;
+        }
+
+        .reports-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .dark-mode .reports-container {
+            background: var(--dark-card);
+            border-color: var(--dark-border);
+        }
+
+        .report-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+        .dark-mode .report-item {
+            border-bottom-color: var(--dark-border);
+        }
+
+        .report-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dark-mode .report-item:hover {
+            background-color: #333;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .report-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .report-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dark-mode .report-meta {
+            color: #aaa;
+        }
+
+        .report-description {
+            margin-top: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dark-mode .tabs {
+            border-bottom-color: var(--dark-border);
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+        .dark-mode .loading {
+            color: #aaa;
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+
+        .dark-mode-toggle span {
+            margin-right: 0.5rem;
+            color: white;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--secondary-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Contact page styles */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .contact-card {
+            background: var(--dark-card);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .dark-mode .contact-card a {
+            color: #64b5f6;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                justify-content: space-around;
+            }
+
+            nav ul li {
+                margin: 0.25rem;
+            }
+
+            th {
+                top: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div style="display: flex; align-items: center;">
+                <h1>SafeRoute مصر</h1>
+                <div class="dark-mode-toggle">
+                    <span>وضع الليل</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <ul>
+                <li><a href="#report">الإبلاغ عن حادثة</a></li>
+                <li><a href="#rankings">تصنيف الأمان</a></li>
+                <li><a href="#all-reports">جميع البلاغات</a></li>
+                <li><a href="#resources">طوارئ</a></li>
+                <li><a href="#contact">اتصل بنا</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>لنجعل مصر أكثر أماناً للجميع</h1>
+            <p>أبلغ عن حوادث التحرش بشكل مجهول وساعد في تحديد المناطق غير الآمنة في المدن المصرية.</p>
+        </section>
+
+        <section id="report" class="card">
+            <h2>الإبلاغ عن حادثة</h2>
+            <form id="reportForm">
+                <label for="title">ملخص مختصر</label>
+                <input type="text" id="title" required placeholder="مثال: تحرش لفظي في ميدان التحرير">
+
+                <label for="date">التاريخ والوقت</label>
+                <input type="datetime-local" id="date" required>
+
+                <label for="category">ماذا حدث؟</label>
+                <select id="category" required>
+                    <option value="">اختر الفئة</option>
+                    <option value="verbal">تحرش لفظي</option>
+                    <option value="physical">تحرش جسدي</option>
+                    <option value="stalking">ملاحقة أو تعقب</option>
+                    <option value="other">أخرى</option>
+                </select>
+
+                <label for="age">الفئة العمرية</label>
+                <select id="age" required>
+                    <option value="">اختر الفئة العمرية</option>
+                    <option value="under18">أقل من 18</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-30">25-30</option>
+                    <option value="over30">أكثر من 30</option>
+                </select>
+
+                <label for="description">وصف ما حدث</label>
+                <textarea id="description" required placeholder="الرجاء وصف الحادثة بالتفصيل"></textarea>
+
+                <label for="harasserDescription">وصف المتحرش</label>
+                <textarea id="harasserDescription"
+                    placeholder=" المظهر الخارجي، الملابس، إلخ (إذا كنت تعرف) اذا كان عنطريق السوشال ميديا اكتب اسم حسابة/الجروب"></textarea>
+
+                <label for="numberOfHarassers">عدد المتحرشين</label>
+                <select id="numberOfHarassers">
+                    <option value="1">فرد واحد</option>
+                    <option value="2">شخصان</option>
+                    <option value="3">ثلاثة أشخاص</option>
+                    <option value="many">عدة أشخاص</option>
+                </select>
+
+                <label for="city">المحافظة</label>
+                <select id="city" required>
+                    <option value="">اختر المحافظة</option>
+                    <option value="Cairo">القاهرة</option>
+                    <option value="Alexandria">الإسكندرية</option>
+                    <option value="Giza">الجيزة</option>
+                    <option value="Luxor">الأقصر</option>
+                    <option value="Aswan">أسوان</option>
+                    <option value="Port Said">بورسعيد</option>
+                    <option value="Suez">السويس</option>
+                    <option value="Ismailia">الإسماعيلية</option>
+                    <option value="Mansoura">المنصورة</option>
+                    <option value="Tanta">طنطا</option>
+                    <option value="Asyut">أسيوط</option>
+                    <option value="Faiyum">الفيوم</option>
+                    <option value="Zagazig">الزقازيق</option>
+                    <option value="Damietta">دمياط</option>
+                    <option value="Minya">المنيا</option>
+                    <option value="Social">Social Media</option>
+                </select>
+
+                <label for="town">المنطقة/الحي</label>
+                <select id="town" required>
+                    <option value="">اختر المنطقة</option>
+                </select>
+
+                <button type="submit">إرسال التقرير</button>
+            </form>
+        </section>
+
+        <section id="rankings" class="card">
+            <h2>تصنيف مدن مصر حسب الأمان</h2>
+            <div id="rankingsLoading" class="loading">جاري تحميل بيانات الأمان...</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المحافظة</th>
+                        <th>المنطقة</th>
+                        <th>عدد البلاغات</th>
+                        <th>مستوى الأمان</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingsTable">
+                </tbody>
+            </table>
+        </section>
+
+        <section id="all-reports" class="card">
+            <h2>جميع البلاغات</h2>
+            <div id="reportsLoading" class="loading">جاري تحميل البلاغات...</div>
+            <div class="reports-container" id="allReports">
+            </div>
+        </section>
+
+        <section id="resources" class="card">
+            <h2>أرقام الطوارئ في مصر</h2>
+
+            <div class="emergency-box">
+                <h3>الشرطة للطوارئ</h3>
+                <p><strong>شرطة الطوارئ:</strong> 122</p>
+                <p><strong>الشرطة السياحية:</strong> 126</p>
+                <p><strong> رقم مباحث الإنترنت:</strong> 108</p>
+                <p><strong>خط مناهضة التحرش:</strong> 15115 (المجلس القومي للمرأة)</p>
+            </div>
+
+            <h3>الدعم القانوني</h3>
+            <p>إذا كنت ترغب في اتخاذ إجراء قانوني ضد التحرش:</p>
+            <ul>
+                <li>اتصل بأقرب قسم شرطة لتقديم بلاغ</li>
+                <li>خط المجلس القومي للمرأة: 15115</li>
+                <li>وحدة مكافحة التحرش بوزارة الداخلية</li>
+            </ul>
+
+            <h3>الدعم النفسي</h3>
+            <p>هذه المنظمات تقدم دعمًا سريًا:</p>
+            <ul>
+                <li>المجلس القومي للمرأة - خدمات الدعم النفسي</li>
+                <li>مؤسسة الشهاب للتنمية الشاملة</li>
+                <li>المؤسسة المصرية لتنمية أحوال الطفولة</li>
+            </ul>
+        </section>
+
+        <section id="contact" class="card">
+            <h2>اتصل بنا</h2>
+            <p>نحن هنا لمساعدتك. يمكنك التواصل معنا عبر القنوات التالية:</p>
+
+            <div class="contact-info">
+                <div class="contact-card">
+                    <h3>معلومات التواصل</h3>
+                    <p><strong>البريد الإلكتروني:</strong> <a
+                            href="mailto:lolkilllerman2040@outlook.com">lolkilllerman2040@outlook.com</a></p>
+                    <p><strong>ساعات العمل:</strong> من الأحد إلى الخميس، 11 صباحاً - 5 مساءً</p>
+                </div>
+
+                <div class="contact-card">
+                    <h3>وسائل التواصل الاجتماعي</h3>
+                    <p>تابعنا على منصات التواصل الاجتماعي:</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/mustafa_div/" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/mostafa-mahmoud-04a928290/" target="_blank"
+                            aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <h3>المقر الرئيسي</h3>
+                    <p>الجيزة</p>
+                    <p>مدينة 6 أكتوبر</p>
+                    <p>مصر</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>SafeRoute مصر © 2025 | منصة للإبلاغ عن حوادث التحرش في مصر بطريقة مجهولة </p>
+    </footer>
+
+    <!-- Font Awesome for social icons -->
+
+    <script src="https://kit.fontawesome.com/210b3cad2d.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+
+        const _0x50ff47 = _0x1b58; (function (_0x409b15, _0x87d672) { const _0x224dce = _0x1b58, _0x684068 = _0x409b15(); while (!![]) { try { const _0x578096 = -parseInt(_0x224dce(0x1ff)) / 0x1 + -parseInt(_0x224dce(0x204)) / 0x2 + parseInt(_0x224dce(0x1c7)) / 0x3 + parseInt(_0x224dce(0x23b)) / 0x4 + parseInt(_0x224dce(0x1b3)) / 0x5 + parseInt(_0x224dce(0x1a5)) / 0x6 * (parseInt(_0x224dce(0x193)) / 0x7) + parseInt(_0x224dce(0x20d)) / 0x8 * (parseInt(_0x224dce(0x1ba)) / 0x9); if (_0x578096 === _0x87d672) break; else _0x684068['push'](_0x684068['shift']()); } catch (_0x37b3ec) { _0x684068['push'](_0x684068['shift']()); } } }(_0x48d3, 0xa749b)); import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js'; import { getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast, update } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js'; import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js'; function _0x48d3() { const _0x551045 = ['toLowerCase', 'mZxBD', 'getElementById', 'opTsi', 'VxeSh', 'Error\x20submitting\x20report:', 'حي\x20رابع', 'obWlq', 'reportForm', 'Hnihz', 'allReports', 'saferoute-cb75e.firebaseapp.com', 'sort', 'وسط\x20البلد', 'ABIBM', 'Generally\x20Safe', 'ptVmO', 'GiHJd', 'تم\x20إرسال\x20التقرير\x20بنجاح!', 'bQefE', 'xZyoz', 'MRinm', 'شبرا', 'آمن\x20بشكل\x20عام', 'forEach', 'الضاحية', 'goAbl', 'value', 'className', 'change', '268388mglemO', 'حي\x20الوايلي', 'log', 'townName', 'eNGDQ', 'OtJPQ', 'TRGQm', 'rankingsTable', 'dyhMD', 'FZNSu', 'حي\x20شرق', 'error', 'حي\x20النصر', 'createdAt', 'hyEJW', 'QMXRG', 'jHkyc', 'oSllT', 'cityName', 'dQCGl', 'Discord', 'https://saferoute-cb75e-default-rtdb.firebaseio.com', 'city', 'nDiee', 'حي\x20المعمورة', 'bkLky', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20حدث\x20خطأ\x20في\x20تحميل\x20البلاغات.\x20الرجاء\x20المحاولة\x20مرة\x20أخرى.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'aSYBI', 'TpJLE', 'reports', 'description', 'reportCount', 'JNLcO', 'hzKHe', '25-30', 'appendChild', 'cYehj', 'kVCDf', 'VkJId', 'مدينة\x20نصر', 'LxwAa', 'UEoko', 'length', 'ycamn', 'فيصل', 'KnRWH', 'XrYzV', 'zFWnE', 'kPlQo', 'textContent', 'pSfKI', 'GVqGF', 'حي\x20رأس\x20البر', 'gqqLu', '</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'UecUR', 'الزمالك', 'title', 'الهرم', 'XdeBG', 'LMKMO', 'meMKQ', 'uJxOm', 'other', 'unknown', 'none', 'date', '</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22', 'KtLik', 'العصافرة', 'طريق\x20المطار', 'xKxxZ', 'yToLM', 'fYxPv', 'محطة\x20الرمل', '18-24', 'الضفة\x20الغربية', '</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>', 'whltl', 'rAPiE', 'المهندسين', 'IoTfB', 'المندرة', 'vmBao', 'TQEvq', 'darkMode', 'setItem', 'WPCdI', 'toggle', 'أخرى', 'AIzaSyD7nx0hYk0WoNiXgNMA-bwHVBzyV_B558c', 'zDhfW', 'حي\x20الجامعة', '\x20|\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20العمر:\x20', 'RGZkj', 'QyGVB', 'حي\x20الغرب', 'خطر\x20عال', 'HQVpr', 'تحرش\x20لفظي', 'حي\x20الحادقة', 'ssIHs', 'OisVS', 'ewgLY', 'foRMe', 'toLocaleString', 'age', 'rLDEU', 'حي\x20فيصل', 'mElIG', '</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-meta\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'ClBOS', '<tr><td\x20colspan=\x224\x22>لا\x20توجد\x20بيانات\x20متاحة\x20حالياً</td></tr>', 'DybeI', 'جزيرة\x20الفنتين', 'nbrbZ', 'category', 'Twitter', 'TkReU', 'OgixY', 'yYxHD', 'حي\x20غرب', 'qOjVY', '3007137SGDteL', 'VsSWt', '</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'حدث\x20خطأ\x20أثناء\x20إرسال\x20التقرير.\x20الرجاء\x20المحاولة\x20مرة\x20أخرى.', 'لا\x20يوجد\x20وصف', 'display', 'val', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-meta\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>وصف\x20المتحرش:</strong>\x20', 'wQdMd', 'التل\x20الكبير', 'bWugQ', 'cFQOy', 'yFQOk', 'أكثر\x20من\x2030', 'hYnhh', 'rNXLY', 'HeFJv', 'RSQur', '18WUjdgX', 'getTime', 'UUhsb', 'VUZdc', 'town', 'mdJiC', 'instgram', 'zUeKe', 'dMdkX', 'numeric', '1:980507507648:web:9720ecadc2b5edb1c2e625', 'المنيب', 'zWzIr', 'mImiB', '20370xIZdDI', 'jBRWg', 'key', 'tkPZe', 'ملاحقة\x20أو\x20تعقب', 'حي\x20ثان', 'QOzCb', '907389Hwiixz', 'UyWqw', 'Error\x20loading\x20rankings:', 'تحرش\x20جسدي', 'mQqgf', '\x20-\x20', 'حي\x20الصحاري', 'exists', 'string', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'ilqUo', 'VNPZv', 'div', '2659224zZtxQx', '🔥\x20Firebase\x20connection\x20error:', 'مدينة\x20الأقصر', 'Yqpbp', 'uid', 'harasserDescription', 'style', 'rankingsLoading', 'reportsLoading', 'body', 'numberOfHarassers', 'ciwFZ', 'HiVpS', 'مصر\x20الجديدة', 'خطر\x20متوسط', 'classList', 'غير\x20معروف', 'dark-mode', 'SYJAK', 'حي\x20الشرق', 'uLiXc', 'المقطم', 'حي\x20توريل', 'IRhKk', 'ZIKQX', 'innerHTML', 'WgeIF', '\x20|\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', 'JetBC', 'ySVKz', 'CkrEg', 'doFpt', 'Moderate\x20Risk', 'FUSjq', 'Facebook', 'pjoOv', 'Error\x20loading\x20reports:', 'geupX', 'getItem', 'qxNoG', 'أقل\x20من\x2018', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-description\x22>', 'hJMDq', 'QvdKa', 'checked', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22report-title\x22>', 'البحوث', 'UiEms', 'aImNd', 'addEventListener', 'GUsmB', 'xZapg', 'hgqCD', 'حي\x20الصعيدي', 'KPoUo', '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>', '1117370rqfwIi', 'المعادي', 'EvzfZ', 'ar-EG', 'toISOString', '1290826jraDQg', 'بدون\x20عنوان', 'RnMFi', 'deXYD', 'الكورنيش', 'LjUiA', 'PXede', 'RuwqD', 'createElement', '16XMdzvm', 'حي\x20أول', 'CqkNL', 'lcsTp', 'byQTd', 'lpCUP', 'replace', 'حي\x20ثالث', 'locations/', 'push', 'uJKSs', 'السد\x20العالي', 'lLepH', 'option', 'ScjWP', 'PyCkt']; _0x48d3 = function () { return _0x551045; }; return _0x48d3(); } const firebaseConfig = { 'apiKey': _0x50ff47(0x172), 'authDomain': _0x50ff47(0x228), 'databaseURL': _0x50ff47(0x250), 'projectId': 'saferoute-cb75e', 'storageBucket': 'saferoute-cb75e.appspot.com', 'messagingSenderId': '980507507648', 'appId': _0x50ff47(0x1af), 'measurementId': 'G-N0495W2K7R' }, app = initializeApp(firebaseConfig), database = getDatabase(app), auth = getAuth(app), cityTowns = { 'Cairo': [_0x50ff47(0x22a), _0x50ff47(0x200), _0x50ff47(0x150), _0x50ff47(0x1d4), _0x50ff47(0x13f), _0x50ff47(0x152), _0x50ff47(0x1dc), _0x50ff47(0x233), 'الدار\x20البيضاء'], 'Alexandria': ['المنتزه', 'سموحة', 'سيدي\x20جابر', _0x50ff47(0x162), 'سان\x20ستيفانو', _0x50ff47(0x15d), _0x50ff47(0x16a)], 'Giza': ['الدقي', _0x50ff47(0x168), 'العجوزة', 'الهرم', _0x50ff47(0x144), _0x50ff47(0x1b0), _0x50ff47(0x1f5)], 'Luxor': [_0x50ff47(0x208), _0x50ff47(0x15e), _0x50ff47(0x164), _0x50ff47(0x1c9)], 'Aswan': ['كورنيش\x20النيل', _0x50ff47(0x18a), _0x50ff47(0x218), _0x50ff47(0x1c0)], 'Port\x20Said': ['المناخ', _0x50ff47(0x236), _0x50ff47(0x1da), _0x50ff47(0x178)], 'Suez': ['حي\x20الأربعين', 'حي\x20الجناين', _0x50ff47(0x184)], 'Ismailia': [_0x50ff47(0x20e), 'حي\x20ثان', _0x50ff47(0x214), _0x50ff47(0x19c)], 'Mansoura': ['حي\x20الجامعة', _0x50ff47(0x1dd), _0x50ff47(0x191), _0x50ff47(0x245)], 'Tanta': [_0x50ff47(0x20e), _0x50ff47(0x1b8), _0x50ff47(0x214), _0x50ff47(0x223)], 'Asyut': [_0x50ff47(0x191), _0x50ff47(0x245), _0x50ff47(0x174), _0x50ff47(0x23c)], 'Faiyum': [_0x50ff47(0x174), _0x50ff47(0x17c), _0x50ff47(0x1fc)], 'Zagazig': [_0x50ff47(0x20e), _0x50ff47(0x1b8), 'حي\x20الجامعة'], 'Damietta': [_0x50ff47(0x247), _0x50ff47(0x130), _0x50ff47(0x14c)], 'Minya': [_0x50ff47(0x174), _0x50ff47(0x245), _0x50ff47(0x191)], 'Social': [_0x50ff47(0x1ab), _0x50ff47(0x1e9), _0x50ff47(0x24f), _0x50ff47(0x18d), 'Telegram'] }, reportForm = document[_0x50ff47(0x21f)](_0x50ff47(0x225)), citySelect = document[_0x50ff47(0x21f)](_0x50ff47(0x251)), townSelect = document['getElementById'](_0x50ff47(0x1a9)), rankingsTable = document[_0x50ff47(0x21f)](_0x50ff47(0x242)), allReportsContainer = document[_0x50ff47(0x21f)](_0x50ff47(0x227)), rankingsLoading = document[_0x50ff47(0x21f)](_0x50ff47(0x1ce)), reportsLoading = document[_0x50ff47(0x21f)](_0x50ff47(0x1cf)), darkModeToggle = document[_0x50ff47(0x21f)]('darkModeToggle'); async function init() { const _0x5a5898 = _0x50ff47, _0x2667a7 = { 'wOKHL': function (_0xe11c9d, _0x429142) { return _0xe11c9d === _0x429142; }, 'FUSjq': 'بدون\x20عنوان', 'UecUR': 'لا\x20يوجد\x20وصف', 'KtLik': _0x5a5898(0x1d7), 'fMctp': _0x5a5898(0x157), 'mQqgf': 'unknown', 'hYnhh': function (_0x3e7595, _0x35e410) { return _0x3e7595(_0x35e410); }, 'UWFpO': _0x5a5898(0x188), 'ciwFZ': _0x5a5898(0x17d), 'ptVmO': function (_0x271eab, _0x4ccedc) { return _0x271eab(_0x4ccedc); }, 'WPCdI': '✅\x20Connected\x20to\x20Firebase.\x20User\x20ID:', 'jHkyc': function (_0x2864fa) { return _0x2864fa(); }, 'RuwqD': function (_0x27ece9, _0x459279) { return _0x27ece9 === _0x459279; }, 'JetBC': _0x5a5898(0x21b), 'deXYD': '🔥\x20Firebase\x20connection\x20error:', 'hyyEv': 'تعذر\x20الاتصال\x20بخدمة\x20Firebase.\x20الرجاء\x20التحقق\x20من\x20اتصال\x20الإنترنت\x20والمحاولة\x20مرة\x20أخرى.' }; try { if (_0x2667a7['wOKHL'](_0x2667a7[_0x5a5898(0x1d2)], _0x5a5898(0x16c))) { const _0x56eaec = _0x5044d5[_0x5a5898(0x199)](); let _0x4d0e67; try { _0x4d0e67 = _0x56eaec[_0x5a5898(0x248)] ? _0x2667a7['wOKHL'](typeof _0x56eaec['createdAt'], _0x5a5898(0x1c2)) ? new _0x2d7a6a(_0x56eaec[_0x5a5898(0x248)]) : new _0x1334ad(_0x56eaec['createdAt']) : new _0xbe756c(); } catch (_0x18448e) { _0x4d0e67 = new _0x3d2b74(); } _0x46b163['push']({ 'id': _0x58d96b[_0x5a5898(0x1b5)], 'title': _0x56eaec[_0x5a5898(0x151)] || _0x2667a7[_0x5a5898(0x1e8)], 'description': _0x56eaec[_0x5a5898(0x136)] || _0x2667a7[_0x5a5898(0x14f)], 'city': _0x56eaec['city'] || _0x2667a7[_0x5a5898(0x15c)], 'town': _0x56eaec[_0x5a5898(0x1a9)] || _0x2667a7[_0x5a5898(0x15c)], 'category': _0x56eaec[_0x5a5898(0x18c)] || _0x2667a7['fMctp'], 'age': _0x56eaec[_0x5a5898(0x182)] || _0x2667a7[_0x5a5898(0x1be)], 'harasserDescription': _0x56eaec['harasserDescription'] || '', 'createdAt': _0x4d0e67[_0x5a5898(0x1a6)]() }); } else { const { user: _0x265211 } = await _0x2667a7[_0x5a5898(0x22d)](signInAnonymously, auth); console[_0x5a5898(0x23d)](_0x2667a7[_0x5a5898(0x16f)], _0x265211[_0x5a5898(0x1cb)]), _0x2667a7[_0x5a5898(0x24b)](setupEventListeners), _0x2667a7[_0x5a5898(0x24b)](loadSafetyRankings), _0x2667a7['jHkyc'](loadAllReports), setupDarkMode(); } } catch (_0x3a0cab) { if (_0x2667a7[_0x5a5898(0x20b)]('ScjWP', _0x2667a7[_0x5a5898(0x1e3)])) console[_0x5a5898(0x246)](_0x2667a7[_0x5a5898(0x207)], _0x3a0cab), _0x2667a7[_0x5a5898(0x22d)](alert, _0x2667a7['hyyEv']); else { _0x1c2206[_0x5a5898(0x1cd)][_0x5a5898(0x198)] = 'none'; const _0x147fa5 = []; _0x3d9fa7[_0x5a5898(0x235)](_0x5c053a => { const _0x2d1f03 = _0x5a5898; _0x147fa5['push']({ 'id': _0x5c053a[_0x2d1f03(0x1b5)], ..._0x5c053a[_0x2d1f03(0x199)]() }); }); if (_0x147fa5[_0x5a5898(0x142)] === 0x0) { _0x3bb6c5['innerHTML'] = _0x2667a7['UWFpO']; return; } _0x147fa5[_0x5a5898(0x229)]((_0x14c804, _0x59093d) => _0x59093d['reportCount'] - _0x14c804[_0x5a5898(0x137)]), _0x147fa5['forEach'](_0x5b5071 => { const _0x189b64 = _0x5a5898, _0x2f5efe = _0x1dd3c3[_0x189b64(0x20c)]('tr'), _0x111792 = _0x2667a7[_0x189b64(0x1a1)](_0x37921d, _0x5b5071['reportCount']), _0xe865dd = _0x111792[_0x189b64(0x21d)]()['replace']('\x20', '-'), _0x42ab29 = _0x2667a7['hYnhh'](_0x3e8c90, _0x111792); _0x2f5efe[_0x189b64(0x1e0)] = _0x189b64(0x1fe) + (_0x5b5071['cityName'] || _0x189b64(0x1d7)) + _0x189b64(0x165) + (_0x5b5071['townName'] || _0x189b64(0x1d7)) + _0x189b64(0x165) + (_0x5b5071[_0x189b64(0x137)] || 0x0) + _0x189b64(0x15b) + _0xe865dd + '\x22>' + _0x42ab29 + _0x189b64(0x14e), _0x52efd5[_0x189b64(0x13b)](_0x2f5efe); }); } } } function setupDarkMode() { const _0x5c8d17 = _0x50ff47, _0x3dd4a2 = { 'xZapg': _0x5c8d17(0x1d8), 'lLepH': _0x5c8d17(0x16d), 'mElIG': function (_0x6a6d46, _0x595936) { return _0x6a6d46 === _0x595936; }, 'GhWGT': 'true', 'HFhtt': _0x5c8d17(0x23a) }, _0x3c63f9 = _0x3dd4a2[_0x5c8d17(0x185)](localStorage[_0x5c8d17(0x1ed)](_0x5c8d17(0x16d)), _0x3dd4a2['GhWGT']); _0x3c63f9 && (document[_0x5c8d17(0x1d0)][_0x5c8d17(0x1d6)]['add'](_0x3dd4a2[_0x5c8d17(0x1fa)]), darkModeToggle[_0x5c8d17(0x1f3)] = !![]), darkModeToggle[_0x5c8d17(0x1f8)](_0x3dd4a2['HFhtt'], function () { const _0x378da = _0x5c8d17; document[_0x378da(0x1d0)]['classList'][_0x378da(0x170)](_0x3dd4a2[_0x378da(0x1fa)]), localStorage[_0x378da(0x16e)](_0x3dd4a2[_0x378da(0x219)], this[_0x378da(0x1f3)]); }); } function setupEventListeners() { const _0xdaaa8e = _0x50ff47, _0x25bdd2 = { 'LMKMO': _0xdaaa8e(0x222), 'uJKSs': 'حدث\x20خطأ\x20أثناء\x20إرسال\x20التقرير.\x20الرجاء\x20المحاولة\x20مرة\x20أخرى.', 'obWlq': function (_0x3089e6, _0x35d386) { return _0x3089e6 === _0x35d386; }, 'RSQur': function (_0x2d03bd) { return _0x2d03bd(); }, 'QvdKa': _0xdaaa8e(0x23a), 'ycamn': 'submit' }; citySelect[_0xdaaa8e(0x1f8)](_0x25bdd2[_0xdaaa8e(0x1f2)], function () { const _0x49d95f = _0xdaaa8e; _0x25bdd2[_0x49d95f(0x224)]('rlRQL', _0x49d95f(0x1f7)) ? (_0x1bcd68[_0x49d95f(0x246)](_0x25bdd2[_0x49d95f(0x154)], _0x4cf3ab), _0x138580(_0x25bdd2[_0x49d95f(0x217)])) : updateTownsDropdown(this[_0x49d95f(0x238)]); }), reportForm[_0xdaaa8e(0x1f8)](_0x25bdd2[_0xdaaa8e(0x143)], async _0x198628 => { const _0x1558fd = _0xdaaa8e; _0x198628['preventDefault'](), await _0x25bdd2[_0x1558fd(0x1a4)](submitReport); }), citySelect[_0xdaaa8e(0x238)] && updateTownsDropdown(citySelect['value']); } function _0x1b58(_0x6d124f, _0xf06552) { const _0x48d33e = _0x48d3(); return _0x1b58 = function (_0x1b58ca, _0x576ba4) { _0x1b58ca = _0x1b58ca - 0x130; let _0x422762 = _0x48d33e[_0x1b58ca]; return _0x422762; }, _0x1b58(_0x6d124f, _0xf06552); } function updateTownsDropdown(_0x51d4aa) { const _0x16d9ae = _0x50ff47, _0x1ed1aa = { 'zFWnE': _0x16d9ae(0x21a), 'lTbci': '<option\x20value=\x22\x22>اختر\x20المنطقة</option>' }; townSelect['innerHTML'] = _0x1ed1aa['lTbci'], _0x51d4aa && cityTowns[_0x51d4aa] && cityTowns[_0x51d4aa][_0x16d9ae(0x235)](_0x2f48bf => { const _0x164c33 = _0x16d9ae, _0x523374 = document[_0x164c33(0x20c)](_0x1ed1aa[_0x164c33(0x147)]); _0x523374[_0x164c33(0x238)] = _0x2f48bf, _0x523374[_0x164c33(0x149)] = _0x2f48bf, townSelect[_0x164c33(0x13b)](_0x523374); }); } async function submitReport() { const _0xa87d83 = _0x50ff47, _0x36140e = { 'WgeIF': function (_0xb14e2c, _0x948e39) { return _0xb14e2c(_0x948e39); }, 'GUsmB': 'غير\x20معروف', 'kPlQo': function (_0x2e8992, _0x14bb38) { return _0x2e8992 !== _0x14bb38; }, 'uLiXc': _0xa87d83(0x131), 'pjoOv': _0xa87d83(0x15a), 'dRpHQ': 'category', 'hyEJW': _0xa87d83(0x182), 'RnMFi': 'description', 'CqkNL': 'harasserDescription', 'rNXLY': function (_0x1fab5a, _0x295c1d, _0x2c9cf1) { return _0x1fab5a(_0x295c1d, _0x2c9cf1); }, 'POdCE': _0xa87d83(0x135), 'cYehj': function (_0x19b072, _0x2212fa) { return _0x19b072(_0x2212fa); }, 'JNLcO': _0xa87d83(0x22f), 'QMXRG': function (_0x51d893) { return _0x51d893(); }, 'xHQbg': function (_0x2756c1, _0x459465) { return _0x2756c1(_0x459465); }, 'zUeKe': _0xa87d83(0x196) }; try { if (_0x36140e[_0xa87d83(0x148)](_0x36140e[_0xa87d83(0x1db)], _0x36140e[_0xa87d83(0x1db)])) { const _0x567859 = _0x4f215b['createElement']('tr'), _0x37b89e = _0x1718df(_0x2b2ecd['reportCount']), _0xa4120e = _0x37b89e[_0xa87d83(0x21d)]()[_0xa87d83(0x213)]('\x20', '-'), _0x4f29c8 = _0x36140e[_0xa87d83(0x1e1)](_0x44752d, _0x37b89e); _0x567859[_0xa87d83(0x1e0)] = _0xa87d83(0x1fe) + (_0x25709b[_0xa87d83(0x24d)] || _0x36140e[_0xa87d83(0x1f9)]) + _0xa87d83(0x165) + (_0x33a45f[_0xa87d83(0x23e)] || _0x36140e[_0xa87d83(0x1f9)]) + _0xa87d83(0x165) + (_0x2c5378[_0xa87d83(0x137)] || 0x0) + _0xa87d83(0x15b) + _0xa4120e + '\x22>' + _0x4f29c8 + _0xa87d83(0x14e), _0x53ff44['appendChild'](_0x567859); } else { const _0xf3cfe9 = { 'title': document[_0xa87d83(0x21f)](_0xa87d83(0x151))['value'], 'date': document[_0xa87d83(0x21f)](_0x36140e[_0xa87d83(0x1ea)])[_0xa87d83(0x238)], 'category': document[_0xa87d83(0x21f)](_0x36140e['dRpHQ'])[_0xa87d83(0x238)], 'age': document['getElementById'](_0x36140e[_0xa87d83(0x249)])['value'], 'description': document[_0xa87d83(0x21f)](_0x36140e[_0xa87d83(0x206)])[_0xa87d83(0x238)], 'harasserDescription': document[_0xa87d83(0x21f)](_0x36140e[_0xa87d83(0x20f)])[_0xa87d83(0x238)], 'numberOfHarassers': document[_0xa87d83(0x21f)](_0xa87d83(0x1d1))[_0xa87d83(0x238)], 'city': document[_0xa87d83(0x21f)]('city')['value'], 'town': document[_0xa87d83(0x21f)]('town')['value'], 'createdAt': new Date()[_0xa87d83(0x203)]() }, _0x550d1d = _0x36140e['rNXLY'](ref, database, _0x36140e['POdCE']), _0x50bb0f = _0x36140e['WgeIF'](push, _0x550d1d); await set(_0x50bb0f, _0xf3cfe9), await _0x36140e[_0xa87d83(0x1a2)](updateLocationStats, _0xf3cfe9[_0xa87d83(0x251)], _0xf3cfe9['town']), _0x36140e[_0xa87d83(0x13c)](alert, _0x36140e[_0xa87d83(0x138)]), reportForm['reset'](), loadSafetyRankings(), _0x36140e[_0xa87d83(0x24a)](loadAllReports); } } catch (_0x100e13) { console[_0xa87d83(0x246)](_0xa87d83(0x222), _0x100e13), _0x36140e['xHQbg'](alert, _0x36140e[_0xa87d83(0x1ac)]); } } async function updateLocationStats(_0x481d6e, _0x1a7f98) { const _0x21f9e9 = _0x50ff47, _0x20cb97 = { 'goAbl': function (_0x3b040b, _0x3d7c0a) { return _0x3b040b(_0x3d7c0a); }, 'hzKHe': function (_0x540249, _0x3343fc) { return _0x540249 === _0x3343fc; }, 'tkPZe': 'WrxfI', 'qOjVY': function (_0x3e3347, _0x146c68, _0x22e2e9, _0x125615) { return _0x3e3347(_0x146c68, _0x22e2e9, _0x125615); }, 'GVqGF': _0x21f9e9(0x1d8), 'geupX': 'darkMode', 'xZyoz': function (_0x4dbb10, _0x59cf58, _0x320582) { return _0x4dbb10(_0x59cf58, _0x320582); }, 'nbrbZ': _0x21f9e9(0x240), 'LjUiA': function (_0x1d2bf8, _0x142ce6, _0x8f895f) { return _0x1d2bf8(_0x142ce6, _0x8f895f); }, 'wQdMd': function (_0x381922, _0x412ab1) { return _0x381922 + _0x412ab1; } }, _0x105eb5 = (_0x481d6e + '_' + _0x1a7f98)['replace'](/\s+/g, '_'), _0x164266 = _0x20cb97[_0x21f9e9(0x231)](ref, database, _0x21f9e9(0x215) + _0x105eb5); try { const _0x31e435 = await new Promise(_0x223ca7 => { const _0x4d044f = _0x21f9e9, _0x240a44 = { 'opTsi': function (_0x4ad665, _0xf479fc) { const _0x5e9dba = _0x1b58; return _0x20cb97[_0x5e9dba(0x237)](_0x4ad665, _0xf479fc); } }; _0x20cb97[_0x4d044f(0x139)](_0x20cb97[_0x4d044f(0x1b6)], _0x20cb97[_0x4d044f(0x1b6)]) ? _0x20cb97[_0x4d044f(0x192)](onValue, _0x164266, _0x223ca7, { 'onlyOnce': !![] }) : _0x240a44[_0x4d044f(0x220)](_0xb6f8e2, _0x47203d[_0x4d044f(0x238)]); }); if (_0x31e435[_0x21f9e9(0x1c1)]()) { if (_0x20cb97[_0x21f9e9(0x139)](_0x20cb97[_0x21f9e9(0x18b)], _0x20cb97[_0x21f9e9(0x18b)])) { const _0x491b02 = _0x31e435[_0x21f9e9(0x199)]()[_0x21f9e9(0x137)] || 0x0; await _0x20cb97[_0x21f9e9(0x209)](update, _0x164266, { 'reportCount': _0x20cb97[_0x21f9e9(0x19b)](_0x491b02, 0x1), 'lastUpdated': new Date()['toISOString']() }); } else _0x2d8bf8[_0x21f9e9(0x1d0)]['classList']['toggle'](_0x20cb97[_0x21f9e9(0x14b)]), _0x41819e['setItem'](_0x20cb97[_0x21f9e9(0x1ec)], this[_0x21f9e9(0x1f3)]); } else await set(_0x164266, { 'cityName': _0x481d6e, 'townName': _0x1a7f98, 'reportCount': 0x1, 'lastUpdated': new Date()[_0x21f9e9(0x203)]() }); } catch (_0x543ae2) { console[_0x21f9e9(0x246)]('Error\x20updating\x20location\x20stats:', _0x543ae2); } } function loadSafetyRankings() { const _0x5196fb = _0x50ff47, _0x271840 = { 'oSllT': 'أقل\x20من\x2018', 'DTiaX': function (_0x2554f4, _0x75d925) { return _0x2554f4 === _0x75d925; }, 'VDKBG': _0x5196fb(0x221), 'HeFJv': _0x5196fb(0x159), 'meMKQ': function (_0x9caeef, _0x33225f) { return _0x9caeef(_0x33225f); }, 'ewgLY': function (_0x32f78d, _0x555e8e) { return _0x32f78d(_0x555e8e); }, 'XgxTB': function (_0x3d4664, _0x557d55) { return _0x3d4664 === _0x557d55; }, 'sQUdU': _0x5196fb(0x230), 'fYxPv': _0x5196fb(0x188), 'dQCGl': '<tr><td\x20colspan=\x224\x22>حدث\x20خطأ\x20في\x20تحميل\x20البيانات</td></tr>', 'VNPZv': function (_0x405aca, _0x4f7977, _0x3e480b) { return _0x405aca(_0x4f7977, _0x3e480b); }, 'byQTd': 'locations', 'yYxHD': function (_0x485441, _0x3da648, _0x51fbdd, _0x544358) { return _0x485441(_0x3da648, _0x51fbdd, _0x544358); }, 'lcsTp': _0x5196fb(0x137), 'qBIBc': function (_0xdbd4e1, _0x256bae) { return _0xdbd4e1(_0x256bae); }, 'VsSWt': 'block' }, _0x29b2ad = _0x271840[_0x5196fb(0x1c5)](ref, database, _0x271840[_0x5196fb(0x211)]), _0x349aba = _0x271840[_0x5196fb(0x190)](query, _0x29b2ad, orderByChild(_0x271840[_0x5196fb(0x210)]), _0x271840['qBIBc'](limitToLast, 0x32)); rankingsLoading['style']['display'] = _0x271840[_0x5196fb(0x194)], rankingsTable[_0x5196fb(0x1e0)] = '', _0x271840[_0x5196fb(0x190)](onValue, _0x349aba, _0x264b0c => { const _0x101c13 = _0x5196fb, _0x2563f7 = { 'yFQOk': _0x271840[_0x101c13(0x24c)], 'IoTfB': _0x101c13(0x1d7), 'hgqCD': function (_0x21fa6a, _0x58c86a) { return _0x271840['DTiaX'](_0x21fa6a, _0x58c86a); }, 'qxNoG': _0x271840['VDKBG'], 'TkReU': _0x271840['HeFJv'], 'vmBao': _0x101c13(0x1eb), 'QyGVB': function (_0x2e841e, _0x234bfd) { const _0x39ca06 = _0x101c13; return _0x271840[_0x39ca06(0x155)](_0x2e841e, _0x234bfd); }, 'oxDTu': function (_0x3364f9, _0x2a0fde) { const _0xe658f4 = _0x101c13; return _0x271840[_0xe658f4(0x17f)](_0x3364f9, _0x2a0fde); } }; rankingsLoading[_0x101c13(0x1cd)][_0x101c13(0x198)] = _0x271840[_0x101c13(0x1a3)]; const _0x5b6c4f = []; _0x264b0c[_0x101c13(0x235)](_0x5dc475 => { const _0x13ace6 = _0x101c13, _0xc89acc = { 'hJMDq': _0x2563f7[_0x13ace6(0x19f)], 'OisVS': _0x13ace6(0x163), 'ilqUo': _0x2563f7[_0x13ace6(0x169)] }; if (_0x2563f7[_0x13ace6(0x1fb)](_0x2563f7[_0x13ace6(0x1ee)], 'NyHQn')) { const _0x462801 = { 'under18': _0xc89acc[_0x13ace6(0x1f1)], '18-24': _0xc89acc[_0x13ace6(0x17e)], '25-30': _0x13ace6(0x13a), 'over30': _0x13ace6(0x1a0), 'unknown': _0xc89acc[_0x13ace6(0x1c4)] }; return _0x462801[_0x4cbc48] || _0xc89acc[_0x13ace6(0x1c4)]; } else _0x5b6c4f[_0x13ace6(0x216)]({ 'id': _0x5dc475['key'], ..._0x5dc475['val']() }); }); if (_0x271840['DTiaX'](_0x5b6c4f[_0x101c13(0x142)], 0x0)) { if (_0x271840['XgxTB'](_0x271840['sQUdU'], _0x271840['sQUdU'])) { rankingsTable[_0x101c13(0x1e0)] = _0x271840[_0x101c13(0x161)]; return; } else _0x471c50['style'][_0x101c13(0x198)] = _0x2563f7[_0x101c13(0x18e)], _0x3b8c33['innerHTML'] = '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22report-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20حدث\x20خطأ\x20في\x20تحميل\x20البلاغات.\x20الرجاء\x20المحاولة\x20مرة\x20أخرى.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20', _0x152313[_0x101c13(0x246)](_0x2563f7[_0x101c13(0x16b)], _0x5238fd); } _0x5b6c4f[_0x101c13(0x229)]((_0x4d20a8, _0x352291) => _0x352291[_0x101c13(0x137)] - _0x4d20a8['reportCount']), _0x5b6c4f['forEach'](_0x54fed1 => { const _0x1e0ae3 = _0x101c13, _0x1dde12 = document[_0x1e0ae3(0x20c)]('tr'), _0x3be759 = _0x2563f7[_0x1e0ae3(0x177)](getSafetyLevel, _0x54fed1[_0x1e0ae3(0x137)]), _0x33a143 = _0x3be759['toLowerCase']()[_0x1e0ae3(0x213)]('\x20', '-'), _0x5ec597 = _0x2563f7['oxDTu'](getSafetyLevelText, _0x3be759); _0x1dde12[_0x1e0ae3(0x1e0)] = '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>' + (_0x54fed1['cityName'] || _0x1e0ae3(0x1d7)) + '</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td>' + (_0x54fed1['townName'] || _0x2563f7[_0x1e0ae3(0x169)]) + _0x1e0ae3(0x165) + (_0x54fed1[_0x1e0ae3(0x137)] || 0x0) + '</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22' + _0x33a143 + '\x22>' + _0x5ec597 + _0x1e0ae3(0x14e), rankingsTable[_0x1e0ae3(0x13b)](_0x1dde12); }); }, _0x3b6a55 => { const _0x4c5821 = _0x5196fb; rankingsLoading['style'][_0x4c5821(0x198)] = _0x4c5821(0x159), console['error'](_0x4c5821(0x1bc), _0x3b6a55), rankingsTable['innerHTML'] = _0x271840[_0x4c5821(0x24e)]; }); } function loadAllReports() { const _0x260290 = _0x50ff47, _0x4da3ed = { 'UyWqw': function (_0xb3e19a, _0x4ef6e7) { return _0xb3e19a !== _0x4ef6e7; }, 'ESOuE': _0x260290(0x183), 'jBRWg': _0x260290(0x197), 'VwTpQ': _0x260290(0x157), 'GiHJd': _0x260290(0x23a), 'foRMe': _0x260290(0x252), 'UHRXo': _0x260290(0x1e5), 'RGZkj': 'report-item', 'ZrEGX': _0x260290(0x202), 'TRGQm': _0x260290(0x1ae), 'mdJiC': '2-digit', 'doFpt': function (_0x56bb10, _0x5e5c9a) { return _0x56bb10(_0x5e5c9a); }, 'KPoUo': _0x260290(0x167), 'bWugQ': _0x260290(0x159), 'VUZdc': '<div\x20class=\x22report-item\x22>لا\x20توجد\x20بلاغات\x20متاحة\x20حالياً</div>', 'gqqLu': function (_0x4157aa, _0x5ddc9c) { return _0x4157aa(_0x5ddc9c); }, 'aSYBI': 'تعذر\x20الاتصال\x20بخدمة\x20Firebase.\x20الرجاء\x20التحقق\x20من\x20اتصال\x20الإنترنت\x20والمحاولة\x20مرة\x20أخرى.', 'PXede': 'FZNSu', 'DybeI': _0x260290(0x1eb), 'Yqpbp': function (_0x4b251d, _0x3988ae, _0x2a7ed7) { return _0x4b251d(_0x3988ae, _0x2a7ed7); }, 'dMdkX': _0x260290(0x135), 'IRhKk': function (_0x1e0f71, _0x17bdac, _0x13a21f) { return _0x1e0f71(_0x17bdac, _0x13a21f); }, 'zDhfW': function (_0x48229b, _0x3b551a) { return _0x48229b(_0x3b551a); }, 'OgixY': _0x260290(0x248), 'dyhMD': 'block', 'DlSof': function (_0x3b5193, _0x20792c, _0x594ec7, _0x3d4875) { return _0x3b5193(_0x20792c, _0x594ec7, _0x3d4875); } }, _0x36c4f8 = _0x4da3ed[_0x260290(0x1ca)](ref, database, _0x4da3ed[_0x260290(0x1ad)]), _0x2b8ea9 = _0x4da3ed[_0x260290(0x1de)](query, _0x36c4f8, _0x4da3ed[_0x260290(0x173)](orderByChild, _0x4da3ed[_0x260290(0x18f)])); reportsLoading[_0x260290(0x1cd)][_0x260290(0x198)] = _0x4da3ed[_0x260290(0x243)], allReportsContainer[_0x260290(0x1e0)] = '', _0x4da3ed['DlSof'](onValue, _0x2b8ea9, _0x1fd760 => { const _0x33c25b = _0x260290, _0x3e5f7c = { 'UUhsb': function (_0x461eed, _0x5754c6) { const _0x41ade3 = _0x1b58; return _0x4da3ed[_0x41ade3(0x1bb)](_0x461eed, _0x5754c6); }, 'kVCDf': _0x4da3ed['ESOuE'], 'VZJot': _0x4da3ed[_0x33c25b(0x1b4)], 'UiEms': _0x33c25b(0x1d7), 'eNGDQ': _0x4da3ed['VwTpQ'], 'PyCkt': 'darkMode', 'yToLM': function (_0x5d2f00, _0x455353) { return _0x5d2f00 === _0x455353; }, 'fQNoY': _0x4da3ed[_0x33c25b(0x22e)], 'xKxxZ': _0x4da3ed[_0x33c25b(0x180)], 'cAKBh': _0x4da3ed['UHRXo'], 'whltl': _0x33c25b(0x1c6), 'XdeBG': _0x4da3ed[_0x33c25b(0x176)], 'lpCUP': _0x4da3ed['ZrEGX'], 'ZIKQX': _0x4da3ed[_0x33c25b(0x241)], 'pSfKI': _0x4da3ed[_0x33c25b(0x1aa)], 'XrYzV': function (_0x4991ff, _0x3ace46) { const _0x5cc86b = _0x33c25b; return _0x4da3ed[_0x5cc86b(0x1e6)](_0x4991ff, _0x3ace46); } }; if (_0x4da3ed[_0x33c25b(0x1fd)] !== _0x4da3ed[_0x33c25b(0x1fd)]) { const _0x3cc186 = _0x36d5ed[_0x33c25b(0x20c)](_0x33c25b(0x21a)); _0x3cc186['value'] = _0x3dde44, _0x3cc186[_0x33c25b(0x149)] = _0x2d3a0a, _0xd4ff16[_0x33c25b(0x13b)](_0x3cc186); } else { reportsLoading[_0x33c25b(0x1cd)][_0x33c25b(0x198)] = _0x4da3ed[_0x33c25b(0x19d)]; if (!_0x1fd760[_0x33c25b(0x1c1)]()) { allReportsContainer[_0x33c25b(0x1e0)] = _0x4da3ed[_0x33c25b(0x1a8)]; return; } const _0x2a9657 = []; _0x1fd760[_0x33c25b(0x235)](_0x5f820c => { const _0x11c734 = _0x33c25b, _0x340d81 = _0x5f820c[_0x11c734(0x199)](); let _0x23e304; try { _0x3e5f7c[_0x11c734(0x1a7)](_0x3e5f7c[_0x11c734(0x13d)], _0x3e5f7c[_0x11c734(0x13d)]) ? _0x1ff388(this['value']) : _0x23e304 = _0x340d81[_0x11c734(0x248)] ? typeof _0x340d81[_0x11c734(0x248)] === _0x11c734(0x1c2) ? new Date(_0x340d81[_0x11c734(0x248)]) : new Date(_0x340d81[_0x11c734(0x248)]) : new Date(); } catch (_0x1e993c) { _0x23e304 = new Date(); } _0x2a9657[_0x11c734(0x216)]({ 'id': _0x5f820c['key'], 'title': _0x340d81['title'] || _0x11c734(0x205), 'description': _0x340d81[_0x11c734(0x136)] || _0x3e5f7c['VZJot'], 'city': _0x340d81[_0x11c734(0x251)] || _0x3e5f7c[_0x11c734(0x1f6)], 'town': _0x340d81[_0x11c734(0x1a9)] || _0x3e5f7c[_0x11c734(0x1f6)], 'category': _0x340d81[_0x11c734(0x18c)] || _0x3e5f7c[_0x11c734(0x23f)], 'age': _0x340d81[_0x11c734(0x182)] || _0x11c734(0x158), 'harasserDescription': _0x340d81[_0x11c734(0x1cc)] || '', 'createdAt': _0x23e304['getTime']() }); }), _0x2a9657[_0x33c25b(0x229)]((_0x1ef5fe, _0x4fdee3) => _0x4fdee3[_0x33c25b(0x248)] - _0x1ef5fe[_0x33c25b(0x248)]), allReportsContainer[_0x33c25b(0x1e0)] = '', _0x2a9657['forEach'](_0x3f3427 => { const _0x57d826 = _0x33c25b, _0x14f4c4 = { 'ClBOS': 'dark-mode', 'ABIBM': _0x3e5f7c[_0x57d826(0x21c)], 'MRinm': function (_0x241c53, _0x15e544) { const _0x2ca0ad = _0x57d826; return _0x3e5f7c[_0x2ca0ad(0x160)](_0x241c53, _0x15e544); }, 'EvzfZ': 'true', 'VkJId': _0x3e5f7c['fQNoY'] }; if (_0x3e5f7c[_0x57d826(0x15f)] !== _0x3e5f7c['cAKBh']) { const _0x1d2b6d = document['createElement'](_0x3e5f7c[_0x57d826(0x166)]); _0x1d2b6d[_0x57d826(0x239)] = _0x3e5f7c[_0x57d826(0x153)]; const _0x5c6202 = new Date(_0x3f3427[_0x57d826(0x248)])[_0x57d826(0x181)](_0x3e5f7c[_0x57d826(0x212)], { 'year': _0x3e5f7c[_0x57d826(0x1df)], 'month': 'long', 'day': _0x3e5f7c[_0x57d826(0x1df)], 'hour': '2-digit', 'minute': _0x3e5f7c[_0x57d826(0x14a)] }); _0x1d2b6d[_0x57d826(0x1e0)] = _0x57d826(0x1f4) + _0x3f3427[_0x57d826(0x151)] + '</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22report-meta\x22>' + _0x5c6202 + _0x57d826(0x186) + _0x3f3427[_0x57d826(0x251)] + _0x57d826(0x1bf) + _0x3f3427['town'] + _0x57d826(0x1e2) + getCategoryText(_0x3f3427[_0x57d826(0x18c)]) + _0x57d826(0x175) + _0x3e5f7c[_0x57d826(0x146)](getAgeText, _0x3f3427['age']) + _0x57d826(0x1f0) + _0x3f3427[_0x57d826(0x136)] + _0x57d826(0x195) + (_0x3f3427[_0x57d826(0x1cc)] ? _0x57d826(0x19a) + _0x3f3427['harasserDescription'] + '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>' : '') + _0x57d826(0x1c3), allReportsContainer['appendChild'](_0x1d2b6d); } else { const _0x4ec2d0 = { 'heEVi': _0x14f4c4[_0x57d826(0x187)], 'MXlpU': _0x14f4c4['ABIBM'] }, _0x4ede22 = _0x14f4c4[_0x57d826(0x232)](_0x3fdc06[_0x57d826(0x1ed)](_0x14f4c4[_0x57d826(0x22b)]), _0x14f4c4[_0x57d826(0x201)]); _0x4ede22 && (_0x4b0a81[_0x57d826(0x1d0)][_0x57d826(0x1d6)]['add'](_0x14f4c4[_0x57d826(0x187)]), _0x4f6999[_0x57d826(0x1f3)] = !![]), _0x1d0537[_0x57d826(0x1f8)](_0x14f4c4[_0x57d826(0x13e)], function () { const _0x163516 = _0x57d826; _0x1bd10d[_0x163516(0x1d0)][_0x163516(0x1d6)][_0x163516(0x170)](_0x4ec2d0['heEVi']), _0x8ae60b[_0x163516(0x16e)](_0x4ec2d0['MXlpU'], this['checked']); }); } }); } }, _0x378003 => { const _0xe2d065 = _0x260290, _0x2111a2 = { 'EhrHw': _0xe2d065(0x1c8), 'DncRV': function (_0x110687, _0x1e7c70) { const _0xa0de2a = _0xe2d065; return _0x4da3ed[_0xa0de2a(0x14d)](_0x110687, _0x1e7c70); }, 'UEoko': _0x4da3ed[_0xe2d065(0x133)] }; _0x4da3ed[_0xe2d065(0x20a)] !== _0xe2d065(0x244) ? (_0x2ff59f['error'](_0x2111a2['EhrHw'], _0x43cde4), _0x2111a2['DncRV'](_0x33eee4, _0x2111a2[_0xe2d065(0x141)])) : (reportsLoading[_0xe2d065(0x1cd)][_0xe2d065(0x198)] = _0x4da3ed[_0xe2d065(0x19d)], allReportsContainer[_0xe2d065(0x1e0)] = _0xe2d065(0x132), console[_0xe2d065(0x246)](_0x4da3ed[_0xe2d065(0x189)], _0x378003)); }); } function getCategoryText(_0x252242) { const _0x387d1b = _0x50ff47, _0x2d204c = { 'mZxBD': _0x387d1b(0x17b), 'LxwAa': _0x387d1b(0x1b7), 'uJxOm': _0x387d1b(0x171), 'SYJAK': _0x387d1b(0x1d7) }, _0x22eefe = { 'verbal': _0x2d204c[_0x387d1b(0x21e)], 'physical': _0x387d1b(0x1bd), 'stalking': _0x2d204c[_0x387d1b(0x140)], 'other': _0x2d204c[_0x387d1b(0x156)] }; return _0x22eefe[_0x252242] || _0x2d204c[_0x387d1b(0x1d9)]; } function getAgeText(_0x9aad07) { const _0x2f683a = _0x50ff47, _0x3ea261 = { 'zWzIr': _0x2f683a(0x1ef), 'SYoPP': '18-24', 'EEYFD': _0x2f683a(0x1a0) }, _0x2a5cc8 = { 'under18': _0x3ea261[_0x2f683a(0x1b1)], '18-24': _0x3ea261['SYoPP'], '25-30': _0x2f683a(0x13a), 'over30': _0x3ea261['EEYFD'], 'unknown': _0x2f683a(0x1d7) }; return _0x2a5cc8[_0x9aad07] || _0x2f683a(0x1d7); } function getSafetyLevel(_0x432d8a) { const _0x335531 = _0x50ff47, _0x53138d = { 'UJLKE': function (_0x20b1a4, _0x336aa) { return _0x20b1a4 > _0x336aa; }, 'mImiB': 'High\x20Risk', 'HiVpS': function (_0x3a74db, _0x3e3879) { return _0x3a74db > _0x3e3879; }, 'TpJLE': _0x335531(0x1e7), 'ySVKz': 'Low\x20Risk', 'HQVpr': _0x335531(0x22c) }; if (_0x53138d['UJLKE'](_0x432d8a, 0x32)) return _0x53138d[_0x335531(0x1b2)]; if (_0x53138d[_0x335531(0x1d3)](_0x432d8a, 0x14)) return _0x53138d[_0x335531(0x134)]; if (_0x53138d[_0x335531(0x1d3)](_0x432d8a, 0x5)) return _0x53138d[_0x335531(0x1e4)]; return _0x53138d[_0x335531(0x17a)]; } function getSafetyLevelText(_0x5a581a) { const _0x5e0dfe = _0x50ff47, _0x50c710 = { 'cFQOy': _0x5e0dfe(0x179), 'Hnihz': _0x5e0dfe(0x1d5), 'KNTCi': 'خطر\x20منخفض', 'KnRWH': _0x5e0dfe(0x234), 'QOzCb': _0x5e0dfe(0x1d7) }, _0x483121 = { 'High\x20Risk': _0x50c710[_0x5e0dfe(0x19e)], 'Moderate\x20Risk': _0x50c710[_0x5e0dfe(0x226)], 'Low\x20Risk': _0x50c710['KNTCi'], 'Generally\x20Safe': _0x50c710[_0x5e0dfe(0x145)] }; return _0x483121[_0x5a581a] || _0x50c710[_0x5e0dfe(0x1b9)]; } document[_0x50ff47(0x1f8)]('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
