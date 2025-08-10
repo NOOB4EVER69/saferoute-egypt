@@ -209,11 +209,11 @@
        }
 
        nav ul li {
-           margin: 5px 600px;
+           margin: 0.5rem;
        }
 
        nav a {
-           color: rgb(0, 0, 0);
+           color: white;
            text-decoration: none;
            font-weight: 500;
            padding: 0.5rem;
