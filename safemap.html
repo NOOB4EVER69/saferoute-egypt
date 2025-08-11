@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>SafeRoute - خريطة البلاغات المباشرة</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" href="./logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="./Mstyle.css" />
+</head>
+
+<body>
+    <div class="loading" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        <div>جاري تحميل البيانات...</div>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <h1>SafeRoute - خريطة البلاغات</h1>
+        </div>
+        <button class="back-btn" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    </header>
+
+    <div class="container">
+        <p class="small">خريطة حية تظهر البلاغات الجديدة فور تسجيلها في النظام</p>
+
+        <div class="controls">
+            <button class="filter-btn harassment-btn active" data-type="harassment">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>التحرش</span>
+            </button>
+            <button class="filter-btn scam-btn active" data-type="scam">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>النصب</span>
+            </button>
+            <button class="filter-btn theft-btn active" data-type="theft">
+                <i class="fas fa-lock"></i>
+                <span>السرقة</span>
+            </button>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="reports-section">
+            <h3 class="section-title">
+                <i class="fas fa-list"></i>
+                <span>أحدث البلاغات</span>
+            </h3>
+            <div class="table-container" id="reportsContainer">
+                <!-- Reports will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>SafeRoute مصر © 2025 | منصة للإبلاغ عن حوادث التحرش والنصب والسرقة في مصر بطريقة مجهولة</p>
+        <div class="accuracy-note">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>الموقع دقيق (على مستوى الحي)</span>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="./Mscript.js"></script>
+</body>
+
+</html>
