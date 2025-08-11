@@ -15,6 +15,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -28,6 +29,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            touch-action: manipulation;
         }
 
         header {
@@ -62,6 +64,7 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            touch-action: manipulation;
         }
 
         .back-btn:hover {
@@ -101,6 +104,7 @@
             margin-bottom: 1rem;
             box-shadow: var(--card-shadow);
             z-index: 1;
+            touch-action: none;
         }
 
         .controls {
@@ -123,6 +127,7 @@
             align-items: center;
             gap: 0.3rem;
             box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
         }
 
         .filter-btn.active {
@@ -165,6 +170,7 @@
             overflow-x: auto;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) #f1f1f1;
+            -webkit-overflow-scrolling: touch;
         }
 
         .table-container::-webkit-scrollbar {
