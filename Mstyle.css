@@ -15,7 +15,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -29,7 +28,90 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            touch-action: manipulation;
+        }
+
+        /* Mobile Coming Soon Screen */
+        .mobile-message {
+            display: none;
+            padding: 20px;
+            height: 100vh;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            color: #2c3e50;
+            direction: rtl;
+            text-align: center;
+        }
+
+        .mobile-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mobile-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-message h1 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .mobile-message .message {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .mobile-message .icon {
+            font-size: 3rem;
+            color: #4a6fa5;
+            margin-bottom: 15px;
+        }
+
+        .mobile-message .desktop-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #4a6fa5;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-message .desktop-link:hover {
+            background: #166088;
+            transform: translateY(-2px);
+        }
+
+        .mobile-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Hide main content when mobile message is shown */
+        body.show-mobile-message header,
+        body.show-mobile-message .container,
+        body.show-mobile-message footer {
+            display: none;
         }
 
         header {
@@ -64,7 +146,6 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
-            touch-action: manipulation;
         }
 
         .back-btn:hover {
@@ -104,7 +185,6 @@
             margin-bottom: 1rem;
             box-shadow: var(--card-shadow);
             z-index: 1;
-            touch-action: none;
         }
 
         .controls {
@@ -127,7 +207,6 @@
             align-items: center;
             gap: 0.3rem;
             box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-            touch-action: manipulation;
         }
 
         .filter-btn.active {
@@ -170,7 +249,6 @@
             overflow-x: auto;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) #f1f1f1;
-            -webkit-overflow-scrolling: touch;
         }
 
         .table-container::-webkit-scrollbar {
@@ -317,6 +395,14 @@
 
         /* Mobile-specific styles */
         @media (max-width: 768px) {
+            .mobile-message {
+                display: flex;
+            }
+
+            body.show-mobile-message {
+                overflow: hidden;
+            }
+
             h1 {
                 font-size: 1.2rem;
             }
@@ -361,6 +447,24 @@
         }
 
         @media (max-width: 480px) {
+            .mobile-message h2 {
+                font-size: 1.5rem;
+            }
+
+            .mobile-message p {
+                font-size: 1rem;
+            }
+
+            .mobile-message .store-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .mobile-message .store-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
             .header-content {
                 gap: 0.5rem;
             }
